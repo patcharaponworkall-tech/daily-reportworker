@@ -1,4 +1,44 @@
 
+let liffProfile = null;
+async function initializeLiff() {
+  try {
+    await liff.init({
+      liffId: '2011529431-bRn6gKcu'
+    });
+    console.log(
+      'LIFF INITIALIZED'
+    );
+    console.log(
+      'LOGGED IN:',
+      liff.isLoggedIn()
+    );
+    if (!liff.isLoggedIn()) {
+      console.log(
+        'USER NOT LOGGED IN'
+      );
+      return;
+    }
+    liffProfile =
+      await liff.getProfile();
+    console.log(
+      'LIFF PROFILE:',
+      liffProfile
+    );
+    console.log(
+      'DISPLAY NAME:',
+      liffProfile.displayName
+    );
+    console.log(
+      'USER ID:',
+      liffProfile.userId
+    );
+  } catch (error) {
+    console.error(
+      'LIFF INIT ERROR:',
+      error
+    );
+  }
+}
 let currentCollageBase64 = '';
 let isProcessingImages = false;
 function drawImageCover(
@@ -171,8 +211,8 @@ async function createCollage(files) {
     );
     return collageBase64;
 }
-document.addEventListener('DOMContentLoaded', function () {
-
+document.addEventListener('DOMContentLoaded', async  function () {
+await  initializeliff();
 const shiftSelect =
         document.getElementById('shift');
 
