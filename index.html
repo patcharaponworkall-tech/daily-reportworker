@@ -10,9 +10,12 @@
   >
 
   <title>Daily Report</title>
+  <link rel="stylesheet" href="index3.css">
 </head>
 <body>
-
+<button type="button" id="themeToggleBtn" style="margin-bottom: 15px; padding: 8px 16px; border-radius: 20px; border: 1px solid var(--border-color); background: var(--card-bg); color: var(--text-color); cursor: pointer;">
+  🌙 / ☀️ สลับโหมด
+</button>
   <h1>Daily Report</h1>
 
   <form id="reportForm">
@@ -164,6 +167,42 @@
 
   </form>
   <script src="app.js"></script>
+  <script>
+    const themeToggleBtn = document.getElementById('themeToggleBtn');
+    const themeIcon = document.getElementById('themeIcon');
+    const themeText = document.getElementById('themeText');
+
+    // ฟังก์ชันอัปเดตข้อความบนปุ่ม
+    function updateButtonUI(isDark) {
+      if (isDark) {
+        themeIcon.textContent = '☀️';
+        themeText.textContent = 'โหมดสว่าง';
+      } else {
+        themeIcon.textContent = '🌙';
+        themeText.textContent = 'โหมดมืด';
+      }
+    }
+
+    // ดึงค่าโหมดที่เคยเก็บบันทึกไว้
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'dark') {
+      document.body.classList.add('dark-mode');
+      updateButtonUI(true);
+    }
+
+    // เหตุการณ์เมื่อกดปุ่มสลับโหมด
+    themeToggleBtn.addEventListener('click', () => {
+      document.body.classList.toggle('dark-mode');
+      const isDark = document.body.classList.contains('dark-mode');
+      
+      // บันทึกสถานะไว้ในความจำของ Browser
+      localStorage.setItem('theme', isDark ? 'dark' : 'light');
+      
+      // เปลี่ยนไอคอนและข้อความบนปุ่ม
+      updateButtonUI(isDark);
+    });
+  </script>
+
 </body>
 
 </html>
