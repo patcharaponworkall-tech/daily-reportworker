@@ -468,6 +468,12 @@ machineSelect.addEventListener(
   const result = await response.json();
 
   console.log('GAS RESPONSE:', result);
+  alert(
+    'Reporter: ' +
+    result.reporterName +
+    '\n\nUser ID: ' +
+    result.reporterUserId
+  );
 
   // GAS ตอบกลับว่าไม่สำเร็จ
   if (!result.success) {
