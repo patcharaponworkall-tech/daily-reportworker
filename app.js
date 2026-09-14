@@ -1,50 +1,54 @@
 
 let liffProfile = null;
+
 async function initializeLiff() {
+
+  const info =
+    document.getElementById('liffUserInfo');
+
   try {
+
+    info.textContent =
+      '1. เริ่ม LIFF...';
+
     await liff.init({
       liffId: '2011529431-bRn6gKcu'
     });
-    console.log(
-      'LIFF INITIALIZED'
-    );
-    console.log(
-      'LOGGED IN:',
-      liff.isLoggedIn()
-    );
+
+    info.textContent =
+      '2. LIFF Initialized';
+
     if (!liff.isLoggedIn()) {
-    
-      document.getElementById('liffUserInfo').textContent =
-        'ยังไม่ได้เข้าสู่ระบบ LINE';
-    
+
+      info.textContent =
+        '3. ยังไม่ได้เข้าสู่ระบบ LINE';
+
       return;
     }
 
+    info.textContent =
+      '3. กำลังอ่านข้อมูลผู้ใช้...';
+
     liffProfile =
       await liff.getProfile();
-    document.getElementById('liffUserInfo').textContent =
-    'ผู้ใช้งาน: ' + liffProfile.displayName;
-    console.log(
-      'LIFF PROFILE:',
-      liffProfile
-    );
-    console.log(
-      'DISPLAY NAME:',
-      liffProfile.displayName
-    );
-    console.log(
-      'USER ID:',
-      liffProfile.userId
-    );
+
+    info.textContent =
+      'ผู้ใช้งาน: ' +
+      liffProfile.displayName;
+
   } catch (error) {
+
+    info.textContent =
+      'LIFF Error: ' +
+      error.message;
+
     console.error(
       'LIFF INIT ERROR:',
       error
     );
-    document.getElementById('liffUserInfo').textContent =
-  'LIFF Error: ' + error.message;
   }
 }
+
 let currentCollageBase64 = '';
 let isProcessingImages = false;
 function drawImageCover(
