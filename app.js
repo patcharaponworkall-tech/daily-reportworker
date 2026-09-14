@@ -13,13 +13,17 @@ async function initializeLiff() {
       liff.isLoggedIn()
     );
     if (!liff.isLoggedIn()) {
-      console.log(
-        'USER NOT LOGGED IN'
-      );
+    
+      document.getElementById('liffUserInfo').textContent =
+        'ยังไม่ได้เข้าสู่ระบบ LINE';
+    
       return;
     }
+
     liffProfile =
       await liff.getProfile();
+    document.getElementById('liffUserInfo').textContent =
+    'ผู้ใช้งาน: ' + liffProfile.displayName;
     console.log(
       'LIFF PROFILE:',
       liffProfile
@@ -37,6 +41,8 @@ async function initializeLiff() {
       'LIFF INIT ERROR:',
       error
     );
+    document.getElementById('liffUserInfo').textContent =
+  'LIFF Error: ' + error.message;
   }
 }
 let currentCollageBase64 = '';
