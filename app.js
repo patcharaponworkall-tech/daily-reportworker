@@ -405,13 +405,20 @@ machineSelect.addEventListener(
     try {
 
     const response = await fetch(url, {
-       method: 'POST',
-       headers: {
-       'Content-Type': 'text/plain;charset=utf-8'
-       },
-       body: JSON.stringify(report)
+  method: 'POST',
+  headers: {
+    'Content-Type': 'text/plain;charset=utf-8'
+  },
+  body: JSON.stringify(report)
 });
 
+const result = await response.json();
+
+console.log('GAS RESPONSE:', result);
+
+if (!result.success) {
+  throw new Error(result.error || 'ไม่สามารถบันทึกข้อมูลได้');
+}
 const result = await response.json();
 
 console.log('GAS RESPONSE:', result);
