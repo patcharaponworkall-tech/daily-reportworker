@@ -466,19 +466,9 @@ machineSelect.addEventListener(
   });
 
   const result = await response.json();
-  document.getElementById('liffUserInfo').textContent =
-  'GAS รับผู้ใช้: ' +
-  (result.reporterName || 'ไม่มีชื่อ') +
-  ' | ID: ' +
-  (result.reporterUserId || 'ไม่มี ID');
-
+      
   console.log('GAS RESPONSE:', result);
-  // alert(
-  //   'Reporter: ' +
-  //   result.reporterName +
-  //   '\n\nUser ID: ' +
-  //   result.reporterUserId
-  // );
+
 
   // GAS ตอบกลับว่าไม่สำเร็จ
   if (!result.success) {
