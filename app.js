@@ -404,17 +404,17 @@ machineSelect.addEventListener(
 
     try {
 
-    await fetch(
-        url,
-        {
-        method: 'POST',
-        mode: 'no-cors',
-        headers: {
-            'Content-Type': 'text/plain;charset=utf-8'
-        },
-        body: JSON.stringify(report)
-        }
-    );
+    const response = await fetch(url, {
+       method: 'POST',
+       headers: {
+       'Content-Type': 'text/plain;charset=utf-8'
+       },
+       body: JSON.stringify(report)
+});
+
+const result = await response.json();
+
+console.log('GAS RESPONSE:', result);
 
     console.log('REQUEST SENT');
     submitButton.textContent = 'ส่งแล้ว';
