@@ -218,7 +218,7 @@ async function createCollage(files) {
     return collageBase64;
 }
 document.addEventListener('DOMContentLoaded', async  function () {
-  await  initializeliff();
+  await  initializeLiff();
 const shiftSelect =
         document.getElementById('shift');
 
