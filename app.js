@@ -519,8 +519,8 @@ machineSelect.addEventListener(
 
 } catch (error) {
 
-  console.error('SAVE ERROR:', error);
-
+  // console.error('SAVE ERROR:', error);
+  alert('SAVE ERROR:\n', error.message);
   submitButton.disabled = false;
 
   submitButton.textContent =
