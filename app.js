@@ -404,57 +404,69 @@ machineSelect.addEventListener(
 
     try {
 
-    const response = await fetch(url, {
-  method: 'POST',
-  headers: {
-    'Content-Type': 'text/plain;charset=utf-8'
-  },
-  body: JSON.stringify(report)
-});
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'text/plain;charset=utf-8'
+    },
+    body: JSON.stringify(report)
+  });
 
-const result = await response.json();
+  const result = await response.json();
 
-console.log('GAS RESPONSE:', result);
+  console.log('GAS RESPONSE:', result);
 
-if (!result.success) {
-  throw new Error(result.error || 'ไม่สามารถบันทึกข้อมูลได้');
+  // GAS ตอบกลับว่าไม่สำเร็จ
+  if (!result.success) {
+    throw new Error(
+      result.error || 'ไม่สามารถบันทึกข้อมูลได้'
+    );
+  }
+
+  // ===== บันทึกสำเร็จจริง =====
+
+  console.log('SAVE SUCCESS');
+
+  submitButton.textContent = 'บันทึกสำเร็จ';
+  submitButton.disabled = false;
+
+  // ล้างเฉพาะข้อมูลของ Report
+  document.getElementById('pass').value = '';
+  document.getElementById('fail').value = '';
+  document.getElementById('wip').value = '';
+  document.getElementById('issue').value = '';
+  document.getElementById('solution').value = '';
+  document.getElementById('fixTime').value = '';
+  document.getElementById('remark').value = '';
+
+  // ล้างรูป
+  imageInput.value = '';
+  currentCollageBase64 = '';
+
+  clearImagesButton.style.display = 'none';
+
+  const canvas =
+    document.getElementById('collageCanvas');
+
+  const ctx =
+    canvas.getContext('2d');
+
+  ctx.clearRect(
+    0,
+    0,
+    canvas.width,
+    canvas.height
+  );
+
+} catch (error) {
+
+  console.error('SAVE ERROR:', error);
+
+  submitButton.disabled = false;
+
+  submitButton.textContent =
+    'เกิดข้อผิดพลาด - ลองส่งอีกครั้ง';
 }
-const result = await response.json();
-
-console.log('GAS RESPONSE:', result);
-
-    console.log('REQUEST SENT');
-    submitButton.textContent = 'ส่งแล้ว';
-    submitButton.disabled = false;
-    document.getElementById('pass').value = '';
-    document.getElementById('fail').value = '';
-    document.getElementById('wip').value = '';
-    document.getElementById('issue').value = '';
-    document.getElementById('solution').value = '';
-    document.getElementById('fixTime').value = '';
-    document.getElementById('remark').value = '';
-
-    imageInput.value = '';
-    currentCollageBase64 = '';
-
-const canvas =
-  document.getElementById('collageCanvas');
-
-const ctx =
-  canvas.getContext('2d');
-
-ctx.clearRect(
-  0,
-  0,
-  canvas.width,
-  canvas.height
-);
-    } catch (error) {
-       
-    console.error('ERROR:', error);
-    submitButton.disabled = false;
-    submitButton.textContent = 'Submit';     
-    }
 
     }
   );
