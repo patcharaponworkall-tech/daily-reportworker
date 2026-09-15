@@ -427,7 +427,7 @@ machineSelect.addEventListener(
       const formattedDate =
         rawDate.replaceAll('-', '/');
 
-            const report = {
+       const report = {
         date: formattedDate,
         shift: document.getElementById('shift').value,
         line: document.getElementById('line').value,
@@ -439,6 +439,10 @@ machineSelect.addEventListener(
         issue: document.getElementById('issue').value,
         solution: document.getElementById('solution').value,
         fixTime: document.getElementById('fixTime').value,
+         
+        appendProblem:
+        document.getElementById('appendProblem').checked,
+    
         remark: document.getElementById('remark').value,
       
         reporterName: liffProfile ? liffProfile.displayName : '',
