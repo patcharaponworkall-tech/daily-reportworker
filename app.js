@@ -9,25 +9,25 @@ async function initializeLiff() {
   try {
 
     info.textContent =
-      '1. เริ่ม LIFF...';
+      'เริ่ม LIFF...';
 
     await liff.init({
       liffId: '2011529431-bRn6gKcu'
     });
 
     info.textContent =
-      '2. LIFF Initialized';
+      'LIFF Initialized';
 
     if (!liff.isLoggedIn()) {
 
       info.textContent =
-        '3. ยังไม่ได้เข้าสู่ระบบ LINE';
+        'ยังไม่ได้เข้าสู่ระบบ LINE';
 
       return;
     }
 
     info.textContent =
-      '3. กำลังอ่านข้อมูลผู้ใช้...';
+      'กำลังอ่านข้อมูลผู้ใช้...';
 
     liffProfile =
       await liff.getProfile();
@@ -483,7 +483,10 @@ machineSelect.addEventListener(
 
   submitButton.textContent = 'บันทึกสำเร็จ';
   submitButton.disabled = false;
-
+      
+  document
+  .getElementById('supervisorReportSection')
+  .style.display = 'block';
   // ล้างเฉพาะข้อมูลของ Report
   document.getElementById('pass').value = '';
   document.getElementById('fail').value = '';
