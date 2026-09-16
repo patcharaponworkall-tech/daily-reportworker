@@ -237,11 +237,55 @@
         
           <p>MODEL: ${report.model}</p>
         
-          <p>STATION: FT</p>
+          const fixtureTotal =
+          report.line === 'J17' ? 33 : 36;
+        
+        const reportTime =
+          report.shift === 'Night'
+            ? '08.00'
+            : '20.00';
+        
+        reportText.innerHTML = `
+          <p><strong>BFT TEAM</strong></p>
+        
+          <p>Date: ${report.date}</p>
         
           <p>
-            Number of WIP: ${report.wip}
+            F7 ${report.shift}-SHIFT ${report.line}
           </p>
+        
+          <p>MODEL: ${report.model}</p>
+        
+          <p>STATION: FT</p>
+        
+          <label for="usableFixtures">
+            Number of usable fixtures (${reportTime})
+          </label>
+        
+          <div>
+            <input
+              type="number"
+              id="usableFixtures"
+              min="0"
+              max="${fixtureTotal}"
+              placeholder="จำนวนที่ใช้ได้"
+            >
+            <strong>/ ${fixtureTotal}</strong>
+          </div>
+        
+          <p>
+            Number of WIP (${reportTime}): ${report.wip}
+          </p>
+        
+          <label>
+            รายละเอียด / Issue
+          </label>
+        
+          <textarea
+            id="supervisorIssue"
+            rows="5"
+          ></textarea>
+        `;
         
           <label>
             รายละเอียด / Issue
