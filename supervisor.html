@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>Supervisor Report</title>
+
+  <link
+    rel="stylesheet"
+    href="index3.css"
+  >
+</head>
+
+<body>
+
+  <h1>📣 ส่งรายงานต่อหัวหน้า</h1>
+
+  <div>
+
+    <p>
+      <label>Date</label><br>
+
+      <input
+        type="date"
+        id="supervisorDate"
+      >
+    </p>
+
+    <p>
+      <label>Shift</label><br>
+
+      <select id="supervisorShift">
+
+        <option value="">
+          -- Select Shift --
+        </option>
+
+        <option value="DAY">
+          DAY
+        </option>
+
+        <option value="Night">
+          Night
+        </option>
+
+      </select>
+    </p>
+
+    <p>
+      <label>Line</label><br>
+
+      <select id="supervisorLine">
+
+        <option value="">
+          -- Select Line --
+        </option>
+
+        <option value="J17">
+          J17
+        </option>
+
+        <option value="K27">
+          K27
+        </option>
+
+      </select>
+    </p>
+
+    <p>
+      <button
+        type="button"
+        id="findSupervisorReportButton"
+      >
+        🔎 ค้นหารายงาน
+      </button>
+    </p>
+
+    <p>
+      <button
+        type="button"
+        onclick="window.location.href='index.html'"
+      >
+        ← กลับหน้า Daily Report
+      </button>
+    </p>
+
+  </div>
+
+</body>
+
+</html>
