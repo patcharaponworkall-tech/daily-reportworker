@@ -31,6 +31,7 @@
       <button
     type="button"
     id="openSupervisorReportButton"
+    style=" margin-top: 24px; text-align: center; "
     onclick="window.location.href='supervisor.html'"
   >
     📣 ส่งรายงานต่อหัวหน้า
@@ -202,11 +203,11 @@
     // ฟังก์ชันอัปเดตข้อความบนปุ่ม
     function updateButtonUI(isDark) {
       if (isDark) {
-        themeIcon.textContent = '☀️';
-        themeText.textContent = 'โหมดสว่าง';
-      } else {
         themeIcon.textContent = '🌙';
         themeText.textContent = 'โหมดมืด';
+      } else {
+        themeIcon.textContent = '☀️';
+        themeText.textContent = 'โหมดสว่าง';
       }
     }
 
