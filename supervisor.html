@@ -115,6 +115,139 @@
 
   });
 </script>
+
+<script>
+
+  const GAS_URL =
+    'https://script.google.com/macros/s/AKfycbz14A1FjQRCWOT427jwoLhEG-UTRgPTFS8gguUWTppOJ4Jnjacd-QxQ4R4yD18Cx6i0/exec';
+
+
+  document
+    .getElementById('searchSupervisorButton')
+    .addEventListener('click', async function () {
+
+      const button = this;
+
+      try {
+
+        const dateValue =
+          document.getElementById('supervisorDate').value;
+
+        const shift =
+          document.getElementById('supervisorShift').value;
+
+        const line =
+          document.getElementById('supervisorLine').value;
+
+
+        if (!dateValue || !shift || !line) {
+          alert('กรุณาเลือก Date / Shift / Line ให้ครบ');
+          return;
+        }
+
+
+        const dateParts =
+          dateValue.split('-');
+
+        const reportDate =
+          `${dateParts[0]}/${dateParts[1]}/${dateParts[2]}`;
+
+
+        button.disabled = true;
+        button.textContent = 'กำลังค้นหา...';
+
+
+        const response = await fetch(
+          GAS_URL,
+          {
+            method: 'POST',
+
+            headers: {
+              'Content-Type':
+                'text/plain;charset=utf-8'
+            },
+
+            body: JSON.stringify({
+              action: 'findSupervisorReport',
+              date: reportDate,
+              shift: shift,
+              line: line
+            })
+          }
+        );
+
+
+        const data =
+          await response.json();
+
+
+        console.log(
+          'SUPERVISOR SEARCH RESULT:',
+          data
+        );
+
+
+        if (!data.success) {
+          throw new Error(
+            data.error ||
+            'เกิดข้อผิดพลาดในการค้นหารายงาน'
+          );
+        }
+
+
+        if (!data.result.found) {
+
+          alert(
+            'ไม่พบรายงาน\n\n' +
+            'Date: ' + reportDate + '\n' +
+            'Shift: ' + shift + '\n' +
+            'Line: ' + line
+          );
+
+          return;
+        }
+
+
+        const report =
+          data.result;
+
+
+        alert(
+          'พบรายงานแล้ว ✅\n\n' +
+
+          'Date: ' + report.date + '\n' +
+          'Shift: ' + report.shift + '\n' +
+          'Line: ' + report.line + '\n' +
+          'Model: ' + report.model + '\n' +
+          'Machine: ' + report.machine + '\n' +
+          'Pass: ' + report.pass + '\n' +
+          'Fail: ' + report.fail + '\n' +
+          'WIP: ' + report.wip + '\n' +
+          'Issue: ' + (report.issue || '-')
+        );
+
+
+      } catch (error) {
+
+        console.error(error);
+
+        alert(
+          'ค้นหารายงานไม่สำเร็จ\n' +
+          error.message
+        );
+
+
+      } finally {
+
+        button.disabled = false;
+        button.textContent =
+          '🔎 ค้นหารายงาน';
+
+      }
+
+    });
+
+</script>
 </body>
 
 </html>
