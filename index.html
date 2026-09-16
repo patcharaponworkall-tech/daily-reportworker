@@ -30,22 +30,35 @@
     text-align: center;
   "
  >
-  <button
-    type="button"
-    id="openSupervisorReportButton"
-    style="
-      width: 100%;
-      padding: 18px;
-      font-size: 18px;
-      font-weight: bold;
-      border: none;
-      border-radius: 12px;
-      cursor: pointer;
-    "
-  >
-    📣 ส่งรายงานต่อหัวหน้า
-  </button>
-  </div>
+    <h2>📣 ส่งรายงานต่อหัวหน้า</h2>
+    
+    <label for="supervisorDate">Date</label>
+    <input
+      type="date"
+      id="supervisorDate"
+    >
+    
+    <label for="supervisorShift">Shift</label>
+    <select id="supervisorShift">
+      <option value="">-- Select Shift --</option>
+      <option value="DAY">DAY</option>
+      <option value="Night">Night</option>
+    </select>
+    
+    <label for="supervisorLine">Line</label>
+    <select id="supervisorLine">
+      <option value="">-- Select Line --</option>
+      <option value="J17">J17</option>
+      <option value="K27">K27</option>
+    </select>
+    
+    <button
+      type="button"
+      id="findSupervisorReportButton"
+    >
+      🔎 ค้นหารายงาน
+    </button>
+        </div>
     <p>
       <label>Date</label><br>
       <input
