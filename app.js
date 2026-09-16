@@ -291,7 +291,7 @@ const modelOptions = {
 
 };
   const sendSupervisorButton =
-    document.getElementById('sendSupervisorButton');
+    document.getElementById('openSupervisorReportButton');
   
   sendSupervisorButton.addEventListener(
     'click',
@@ -564,9 +564,6 @@ machineSelect.addEventListener(
   submitButton.textContent = 'บันทึกสำเร็จ';
   submitButton.disabled = false;
       
-  document
-  .getElementById('supervisorReportSection')
-  .style.display = 'block';
   // ล้างเฉพาะข้อมูลของ Report
   document.getElementById('pass').value = '';
   document.getElementById('fail').value = '';
