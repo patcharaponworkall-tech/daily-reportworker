@@ -175,3 +175,14 @@ button[type="submit"]:active {
     padding: 20px;
   }
 }
+#openSupervisorReportButton {
+  width: 100%;
+  padding: 14px 16px;
+  border: none;
+  border-radius: 8px;
+
+  font-size: 18px;
+  font-weight: bold;
+
+  cursor: pointer;
+}
