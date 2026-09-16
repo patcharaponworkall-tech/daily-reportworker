@@ -273,6 +273,23 @@ reportText.innerHTML = `
   </div>
 
   <p>
+    <label for="overallSituation">
+      Overall situation
+    </label>
+    <br>
+
+    <select id="overallSituation">
+      <option value="Normal">
+        Normal
+      </option>
+
+      <option value="Abnormal">
+        Abnormal
+      </option>
+    </select>
+  </p>
+
+  <p>
     Number of WIP (${reportTime}): ${report.wip}
   </p>
 
