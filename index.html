@@ -13,8 +13,13 @@
   <link rel="stylesheet" href="index3.css">
 </head>
 <body>
-<button type="button" id="themeToggleBtn" style="margin-bottom: 15px; padding: 8px 16px; border-radius: 20px; border: 1px solid var(--border-color); background: var(--card-bg); color: var(--text-color); cursor: pointer;">
-  🌙 / ☀️ สลับโหมด
+<button
+  type="button"
+  id="themeToggleBtn"
+  style="margin-bottom: 15px; padding: 8px 16px; border-radius: 20px; border: 1px solid var(--border-color); background: var(--card-bg); color: var(--text-color); cursor: pointer;"
+>
+  <span id="themeIcon">🌙</span>
+  <span id="themeText">โหมดมืด</span>
 </button>
   <h1>Daily Report</h1>
   <p id="liffUserInfo">
@@ -23,42 +28,14 @@
 
   
   <form id="reportForm">
-    <div
-  id="supervisorReportSection"
-  style="
-    margin-top: 24px;
-    text-align: center;
-  "
- >
-    <h2>📣 ส่งรายงานต่อหัวหน้า</h2>
+      <button
+    type="button"
+    id="openSupervisorReportButton"
+    onclick="window.location.href='supervisor.html'"
+  >
+    📣 ส่งรายงานต่อหัวหน้า
+  </button>
     
-    <label for="supervisorDate">Date</label>
-    <input
-      type="date"
-      id="supervisorDate"
-    >
-    
-    <label for="supervisorShift">Shift</label>
-    <select id="supervisorShift">
-      <option value="">-- Select Shift --</option>
-      <option value="DAY">DAY</option>
-      <option value="Night">Night</option>
-    </select>
-    
-    <label for="supervisorLine">Line</label>
-    <select id="supervisorLine">
-      <option value="">-- Select Line --</option>
-      <option value="J17">J17</option>
-      <option value="K27">K27</option>
-    </select>
-    
-    <button
-      type="button"
-      id="findSupervisorReportButton"
-    >
-      🔎 ค้นหารายงาน
-    </button>
-        </div>
     <p>
       <label>Date</label><br>
       <input
