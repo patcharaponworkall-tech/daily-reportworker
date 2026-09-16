@@ -290,7 +290,83 @@ const modelOptions = {
   ]
 
 };
-
+  const sendSupervisorButton =
+    document.getElementById('sendSupervisorButton');
+  
+  sendSupervisorButton.addEventListener(
+    'click',
+    function () {
+  
+      const rawDate =
+        document.getElementById('date').value;
+  
+      if (!rawDate) {
+        alert('กรุณาเลือก Date');
+        return;
+      }
+  
+      const dateParts =
+        rawDate.split('-');
+  
+      const displayDate =
+        `${dateParts[2]}/${dateParts[1]}/${dateParts[0]}`;
+  
+      const shift =
+        document.getElementById('shift').value;
+  
+      const line =
+        document.getElementById('line').value;
+  
+      const model =
+        document.getElementById('model').value;
+  
+      const machine =
+        document.getElementById('machine').value;
+  
+      const pass =
+        document.getElementById('pass').value;
+  
+      const fail =
+        document.getElementById('fail').value;
+  
+      const wip =
+        document.getElementById('wip').value;
+  
+      const issue =
+        document.getElementById('issue').value;
+  
+      const solution =
+        document.getElementById('solution').value;
+  
+      const fixTime =
+        document.getElementById('fixTime').value;
+  
+      const remark =
+        document.getElementById('remark').value;
+  
+      const reporterName =
+        liffProfile
+          ? liffProfile.displayName
+          : '-';
+  
+      const message =
+        'BFT TEAM\n' +
+        'Date: ' + displayDate + '\n' +
+        shift + '-SHIFT ' + line + '\n' +
+        'MODEL: ' + model + '\n' +
+        'STATION: ' + machine + '\n' +
+        'Pass / OK: ' + (pass || '-') + '\n' +
+        'Fail / NG: ' + (fail || '-') + '\n' +
+        'WIP: ' + (wip || '-') + '\n' +
+        'Issue: ' + (issue || '-') + '\n' +
+        'Solution: ' + (solution || '-') + '\n' +
+        'Fix Time: ' + (fixTime || '-') + '\n' +
+        'Remark: ' + (remark || '-') + '\n' +
+        'Reported by: ' + reporterName;
+  
+      alert(message);
+    }
+  );
 
 function updateModelOptions() {
 
