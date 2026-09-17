@@ -520,7 +520,7 @@ ${issue}`;
 
       document
   .getElementById('sendSupervisorButton')
-  .addEventListener('click', function () {
+  .addEventListener('click', async  function () {
 
     const finalText =
       document
@@ -549,12 +549,95 @@ ${issue}`;
 
     // TEST ONLY
     // ขั้นนี้ยังไม่ส่ง LINE จริง
-    alert(
-      'ทดสอบผ่าน: ยืนยันการส่งแล้ว\n' +
-      'แต่ยังไม่ได้ส่ง LINE จริง'
+    const sendButton =
+  document.getElementById(
+    'sendSupervisorButton'
+  );
+
+try {
+
+  sendButton.disabled = true;
+
+  sendButton.textContent =
+    'กำลังส่งทดสอบ...';
+
+
+  const response =
+    await fetch(
+      GAS_URL,
+      {
+        method: 'POST',
+
+        headers: {
+          'Content-Type':
+            'text/plain;charset=utf-8'
+        },
+
+        body: JSON.stringify({
+          action:
+            'sendSupervisorReport',
+
+          text:
+            finalText
+        })
+      }
     );
 
-  });
+
+  const data =
+    await response.json();
+
+
+  console.log(
+    'SUPERVISOR SEND TEST:',
+    data
+  );
+
+
+  if (!data.success) {
+    throw new Error(
+      data.error ||
+      'GAS ไม่สามารถรับรายงานได้'
+    );
+  }
+
+
+  if (data.testMode !== true) {
+    throw new Error(
+      'GAS ไม่ได้อยู่ใน TEST MODE'
+    );
+  }
+
+
+  alert(
+    'GAS รับ Supervisor Report สำเร็จ\n' +
+    'ยังไม่ได้ส่ง LINE จริง'
+  );
+
+
+} catch (error) {
+
+  console.error(error);
+
+  alert(
+    'ส่งข้อมูลทดสอบไม่สำเร็จ\n' +
+    error.message
+  );
+
+
+} } finally {
+
+  sendButton.disabled = false;
+
+  sendButton.textContent =
+    '📣 ส่งรายงานต่อหัวหน้า';
+
+}
+
+});
+
+
+preview.style.display = 'block';
 
 
 preview.style.display = 'block';
