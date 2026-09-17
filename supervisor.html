@@ -100,11 +100,43 @@
     </p>
 
   </div>
+
+  <script
+  charset="utf-8"
+  src="https://static.line-scdn.net/liff/edge/2/sdk.js"
+></script>
+
 <script>
-  document.addEventListener('DOMContentLoaded', function () {
+  document.addEventListener(
+  'DOMContentLoaded',
+  async function () {
+
+    try {
+
+      await liff.init({
+        liffId: '2011529431-bRn6gKcu'
+      });
+
+      console.log('LIFF INIT SUCCESS');
+
+    } catch (error) {
+
+      console.error(
+        'LIFF INIT ERROR:',
+        error
+      );
+
+      alert(
+        'LIFF เริ่มต้นไม่สำเร็จ\n' +
+        error.message
+      );
+
+    }
 
     const dateInput =
-      document.getElementById('supervisorDate');
+      document.getElementById(
+        'supervisorDate'
+      );
 
     const today = new Date();
 
@@ -122,7 +154,8 @@
     dateInput.value =
       `${year}-${month}-${day}`;
 
-  });
+  }
+);
 </script>
 
 <script>
