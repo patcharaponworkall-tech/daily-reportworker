@@ -334,7 +334,7 @@ document
       document.getElementById('previewSupervisorButton');
 
 
-    // ถ้า Preview เปิดอยู่ → กดอีกครั้งเพื่อปิด
+    // ถ้าเปิด Preview อยู่ → ปิด
     if (finalPreview.style.display === 'block') {
 
       finalPreview.style.display = 'none';
@@ -346,6 +346,7 @@ document
     }
 
 
+    // ถ้าปิดอยู่ → อ่านค่าปัจจุบัน
     const usableFixtures =
       document.getElementById('usableFixtures').value;
 
@@ -397,6 +398,7 @@ ${issue}`;
       .textContent = finalText;
 
 
+    // เปิด Preview
     finalPreview.style.display = 'block';
 
     previewButton.textContent =
@@ -404,62 +406,7 @@ ${issue}`;
 
   });
 
-    const usableFixtures =
-      document.getElementById('usableFixtures').value;
 
-    const overallSituation =
-      document.getElementById('overallSituation').value;
-
-    const issue =
-      document.getElementById('supervisorIssue')
-        .value
-        .trim();
-
-
-    if (usableFixtures === '') {
-      alert('กรุณากรอกจำนวน Fixtures ที่ใช้ได้');
-      return;
-    }
-
-
-    const usableNumber =
-      Number(usableFixtures);
-
-
-    if (
-      !Number.isInteger(usableNumber) ||
-      usableNumber < 0 ||
-      usableNumber > fixtureTotal
-    ) {
-      alert(
-        `จำนวน Fixtures ต้องเป็น 0 - ${fixtureTotal}`
-      );
-      return;
-    }
-
-
-    const finalText =
-`BFT TEAM
-Date: ${report.date}
-F7 ${report.shift}-SHIFT ${report.line}
-MODEL: ${report.model}
-STATION: FT
-Number of usable fixtures (${reportTime}): ${usableNumber}/${fixtureTotal}
-Overall situation: ${overallSituation}
-Number of WIP (${reportTime}): ${report.wip}
-${issue}`;
-
-
-    document
-      .getElementById('finalSupervisorText')
-      .textContent = finalText;
-
-
-    document
-      .getElementById('finalSupervisorPreview')
-      .style.display = 'block';
-
-  });
         
 preview.style.display = 'block';
 
