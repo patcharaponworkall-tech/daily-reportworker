@@ -357,7 +357,12 @@ reportText.innerHTML = `
         📣 ส่งรายงานต่อหัวหน้า
       </button>
     </p>
-    
+    <button
+  type="button"
+  id="testShareButton"
+>
+  🧪 ทดสอบ LINE Share
+</button>
   </div>
 `;
 
@@ -636,7 +641,6 @@ try {
 
 });
 
-
 preview.style.display = 'block';
 
 
@@ -661,7 +665,53 @@ preview.style.display = 'block';
       }
 
     });
+document
+  .getElementById('testShareButton')
+  .addEventListener('click', async function () {
 
+    try {
+
+      if (!liff.isLoggedIn()) {
+        alert('กรุณาเปิดหน้านี้ผ่าน LINE');
+        return;
+      }
+
+      if (!liff.isApiAvailable('shareTargetPicker')) {
+        alert(
+          'อุปกรณ์นี้ไม่รองรับ Share Target Picker'
+        );
+        return;
+      }
+
+      const result =
+        await liff.shareTargetPicker([
+          {
+            type: 'text',
+            text:
+              '[TEST] Supervisor Report'
+          }
+        ]);
+
+      console.log(
+        'SHARE RESULT:',
+        result
+      );
+
+    } catch (error) {
+
+      console.error(
+        'SHARE ERROR:',
+        error
+      );
+
+      alert(
+        'เปิด LINE Share ไม่สำเร็จ\n' +
+        error.message
+      );
+
+    }
+
+  });
 </script>
 </body>
 
