@@ -240,7 +240,6 @@ const reportTime =
     ? '08.00'
     : '20.00';
 
-
 reportText.innerHTML = `
   <p><strong>BFT TEAM</strong></p>
 
@@ -301,31 +300,28 @@ reportText.innerHTML = `
     id="supervisorIssue"
     rows="5"
   ></textarea>
-`;
-<p>
-  <button
-    type="button"
-    id="previewSupervisorButton"
+
+  <p>
+    <button
+      type="button"
+      id="previewSupervisorButton"
+    >
+      👁️ ดูข้อความก่อนส่ง
+    </button>
+  </p>
+
+  <div
+    id="finalSupervisorPreview"
+    style="display: none;"
   >
-    👁️ ดูข้อความก่อนส่ง
-  </button>
-</p>
+    <h3>ข้อความที่จะส่ง</h3>
 
-<div
-  id="finalSupervisorPreview"
-  style="display: none;"
->
-  <h3>ข้อความที่จะส่ง</h3>
-
-  <pre
-    id="finalSupervisorText"
-    style="white-space: pre-wrap;"
-  ></pre>
-</div>
-
-document
-  .getElementById('supervisorIssue')
-  .value = report.issue || '';
+    <pre
+      id="finalSupervisorText"
+      style="white-space: pre-wrap;"
+    ></pre>
+  </div>
+`;
 
 document
   .getElementById('previewSupervisorButton')
