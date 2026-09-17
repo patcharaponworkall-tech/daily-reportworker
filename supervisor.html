@@ -553,9 +553,9 @@ ${issue}`;
 
   });
 
-      document
+      ddocument
   .getElementById('sendSupervisorButton')
-  .addEventListener('click', async  function () {
+  .addEventListener('click', async function () {
 
     const finalText =
       document
@@ -563,12 +563,10 @@ ${issue}`;
         .textContent
         .trim();
 
-
     if (!finalText) {
       alert('กรุณาดูข้อความก่อนส่ง');
       return;
     }
-
 
     const confirmed =
       confirm(
@@ -576,100 +574,71 @@ ${issue}`;
         finalText
       );
 
-
     if (!confirmed) {
       return;
     }
 
-
-    // TEST ONLY
-    // ขั้นนี้ยังไม่ส่ง LINE จริง
     const sendButton =
-  document.getElementById(
-    'sendSupervisorButton'
-  );
+      document.getElementById(
+        'sendSupervisorButton'
+      );
 
-try {
+    try {
 
-  sendButton.disabled = true;
+      sendButton.disabled = true;
+      sendButton.textContent =
+        'กำลังเปิด LINE...';
 
-  sendButton.textContent =
-    'กำลังส่งทดสอบ...';
-
-
-  const response =
-    await fetch(
-      GAS_URL,
-      {
-        method: 'POST',
-
-        headers: {
-          'Content-Type':
-            'text/plain;charset=utf-8'
-        },
-
-        body: JSON.stringify({
-          action:
-            'sendSupervisorReport',
-
-          text:
-            finalText
-        })
+      if (!liff.isLoggedIn()) {
+        throw new Error(
+          'กรุณาเปิดหน้านี้ผ่าน LINE'
+        );
       }
-    );
 
+      if (
+        !liff.isApiAvailable(
+          'shareTargetPicker'
+        )
+      ) {
+        throw new Error(
+          'อุปกรณ์นี้ไม่รองรับ LINE Share'
+        );
+      }
 
-  const data =
-    await response.json();
+      const result =
+        await liff.shareTargetPicker([
+          {
+            type: 'text',
+            text: finalText
+          }
+        ]);
 
+      console.log(
+        'SUPERVISOR SHARE RESULT:',
+        result
+      );
 
-  console.log(
-    'SUPERVISOR SEND TEST:',
-    data
-  );
+    } catch (error) {
 
+      console.error(
+        'SUPERVISOR SHARE ERROR:',
+        error
+      );
 
-  if (!data.success) {
-    throw new Error(
-      data.error ||
-      'GAS ไม่สามารถรับรายงานได้'
-    );
-  }
+      alert(
+        'เปิด LINE Share ไม่สำเร็จ\n' +
+        error.message
+      );
 
+    } finally {
 
-  if (data.testMode !== true) {
-    throw new Error(
-      'GAS ไม่ได้อยู่ใน TEST MODE'
-    );
-  }
+      sendButton.disabled = false;
+      sendButton.textContent =
+        '📣 ส่งรายงานต่อหัวหน้า';
 
+    }
 
-  alert(
-    'GAS รับ Supervisor Report สำเร็จ\n' +
-    'ยังไม่ได้ส่ง LINE จริง'
-  );
-
-
-} catch (error) {
-
-  console.error(error);
-
-  alert(
-    'ส่งข้อมูลทดสอบไม่สำเร็จ\n' +
-    error.message
-  );
-
-
- } finally {
-
-  sendButton.disabled = false;
-
-  sendButton.textContent =
-    '📣 ส่งรายงานต่อหัวหน้า';
-
-}
-
-});
+  });
         document
   .getElementById('testShareButton')
   .addEventListener('click', async function () {
