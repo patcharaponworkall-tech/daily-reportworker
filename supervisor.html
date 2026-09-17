@@ -319,6 +319,16 @@ reportText.innerHTML = `
   ยังไม่ได้เลือกรูป
 </p>
 
+<div
+  id="supervisorImagePreview"
+  style="
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 10px;
+  "
+></div>
+
   <p>
     <button
       type="button"
@@ -350,14 +360,15 @@ const supervisorImages =
 
 const supervisorImageStatus =
   document.getElementById('supervisorImageStatus');
-
+const supervisorImagePreview =
+  document.getElementById('supervisorImagePreview');
 
 supervisorImages
   .addEventListener('change', function () {
 
     const files =
       Array.from(this.files);
-
+    supervisorImagePreview.innerHTML = '';
 
     if (files.length === 0) {
 
@@ -390,7 +401,28 @@ supervisorImages
 
     supervisorImageStatus.textContent =
       `เลือกรูปแล้ว ${files.length} รูป`;
+    files.forEach(function (file) {
 
+  const imageUrl =
+    URL.createObjectURL(file);
+
+  const img =
+    document.createElement('img');
+
+  img.src = imageUrl;
+
+  img.style.width = '100px';
+  img.style.height = '100px';
+  img.style.objectFit = 'cover';
+  img.style.borderRadius = '8px';
+
+  img.onload = function () {
+    URL.revokeObjectURL(imageUrl);
+  };
+
+  supervisorImagePreview.appendChild(img);
+
+});
   });
         
 document
