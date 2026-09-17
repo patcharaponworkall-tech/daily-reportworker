@@ -348,6 +348,16 @@ reportText.innerHTML = `
       id="finalSupervisorText"
       style="white-space: pre-wrap;"
     ></pre>
+    
+    <p>
+      <button
+        type="button"
+        id="sendSupervisorButton"
+      >
+        📣 ส่งรายงานต่อหัวหน้า
+      </button>
+    </p>
+    
   </div>
 `;
 
@@ -508,9 +518,47 @@ ${issue}`;
 
   });
 
+      document
+  .getElementById('sendSupervisorButton')
+  .addEventListener('click', function () {
 
-        
+    const finalText =
+      document
+        .getElementById('finalSupervisorText')
+        .textContent
+        .trim();
+
+
+    if (!finalText) {
+      alert('กรุณาดูข้อความก่อนส่ง');
+      return;
+    }
+
+
+    const confirmed =
+      confirm(
+        'ยืนยันส่งรายงานนี้ต่อหัวหน้า?\n\n' +
+        finalText
+      );
+
+
+    if (!confirmed) {
+      return;
+    }
+
+
+    // TEST ONLY
+    // ขั้นนี้ยังไม่ส่ง LINE จริง
+    alert(
+      'ทดสอบผ่าน: ยืนยันการส่งแล้ว\n' +
+      'แต่ยังไม่ได้ส่ง LINE จริง'
+    );
+
+  });
+
+
 preview.style.display = 'block';
+        
 
       } catch (error) {
 
