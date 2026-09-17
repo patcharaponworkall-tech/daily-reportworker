@@ -640,32 +640,7 @@ try {
 }
 
 });
-
-preview.style.display = 'block';
-
-
-        
-
-      } catch (error) {
-
-        console.error(error);
-
-        alert(
-          'ค้นหารายงานไม่สำเร็จ\n' +
-          error.message
-        );
-
-
-      } finally {
-
-        button.disabled = false;
-        button.textContent =
-          '🔎 ค้นหารายงาน';
-
-      }
-
-    });
-document
+        document
   .getElementById('testShareButton')
   .addEventListener('click', async function () {
 
@@ -712,6 +687,33 @@ document
     }
 
   });
+        
+
+preview.style.display = 'block';
+
+
+        
+
+      } catch (error) {
+
+        console.error(error);
+
+        alert(
+          'ค้นหารายงานไม่สำเร็จ\n' +
+          error.message
+        );
+
+
+      } finally {
+
+        button.disabled = false;
+        button.textContent =
+          '🔎 ค้นหารายงาน';
+
+      }
+
+    });
+
 </script>
 </body>
 
