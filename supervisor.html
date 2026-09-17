@@ -301,6 +301,24 @@ reportText.innerHTML = `
     rows="5"
   ></textarea>
 
+<p>
+  <label for="supervisorImages">
+    รูปภาพสำหรับส่ง LINE
+  </label>
+  <br>
+
+  <input
+    type="file"
+    id="supervisorImages"
+    accept="image/jpeg,image/png"
+    multiple
+  >
+</p>
+
+<p id="supervisorImageStatus">
+  ยังไม่ได้เลือกรูป
+</p>
+
   <p>
     <button
       type="button"
@@ -326,6 +344,54 @@ reportText.innerHTML = `
 document
   .getElementById('supervisorIssue')
   .value = report.issue || '';
+
+const supervisorImages =
+  document.getElementById('supervisorImages');
+
+const supervisorImageStatus =
+  document.getElementById('supervisorImageStatus');
+
+
+supervisorImages
+  .addEventListener('change', function () {
+
+    const files =
+      Array.from(this.files);
+
+
+    if (files.length === 0) {
+
+      supervisorImageStatus.textContent =
+        'ยังไม่ได้เลือกรูป';
+
+      return;
+    }
+
+
+    const invalidFile =
+      files.find(file =>
+        file.type !== 'image/jpeg' &&
+        file.type !== 'image/png'
+      );
+
+
+    if (invalidFile) {
+
+      alert('รองรับเฉพาะรูป JPEG / PNG');
+
+      this.value = '';
+
+      supervisorImageStatus.textContent =
+        'ยังไม่ได้เลือกรูป';
+
+      return;
+    }
+
+
+    supervisorImageStatus.textContent =
+      `เลือกรูปแล้ว ${files.length} รูป`;
+
+  });
         
 document
   .getElementById('previewSupervisorButton')
