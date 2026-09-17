@@ -324,6 +324,10 @@ reportText.innerHTML = `
 `;
 
 document
+  .getElementById('supervisorIssue')
+  .value = report.issue || '';
+        
+document
   .getElementById('previewSupervisorButton')
   .addEventListener('click', function () {
 
