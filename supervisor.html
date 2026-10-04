@@ -663,23 +663,23 @@ ${issue}`;
         return;
       }
 
-      const result =
-        await liff.shareTargetPicker([
-          [
-            {
-              type: 'image',
-        
-              originalContentUrl:
-                'https://drive.usercontent.google.com/download?id=11YoDCtduUlKoX7wlPUpn8ulMBJC144fz&export=view',
-        
-              previewImageUrl:
-                'https://drive.usercontent.google.com/download?id=11YoDCtduUlKoX7wlPUpn8ulMBJC144fz&export=view'
-            }
-          ],
-          {
-            isMultiple: false
-          }
-        );
+const result =
+  await liff.shareTargetPicker(
+    [
+      {
+        type: 'image',
+
+        originalContentUrl:
+          'https://drive.usercontent.google.com/download?id=11YoDCtduUlKoX7wlPUpn8ulMBJC144fz&export=view',
+
+        previewImageUrl:
+          'https://drive.usercontent.google.com/download?id=11YoDCtduUlKoX7wlPUpn8ulMBJC144fz&export=view'
+      }
+    ],
+    {
+      isMultiple: false
+    }
+  );
 
       console.log(
         'SHARE RESULT:',
