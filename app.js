@@ -419,8 +419,13 @@ machineSelect.addEventListener(
       const submitButton =
       document.getElementById('submitButton');
 
+      const formStatus =
+      document.getElementById('formStatus');
+
       submitButton.disabled = true;
-      submitButton.textContent = 'ส่งคำขอแล้ว...';  
+      submitButton.setAttribute('aria-busy', 'true');
+      submitButton.textContent = 'กำลังส่งรายงาน...';
+      formStatus.textContent = 'กำลังส่งรายงาน กรุณารอสักครู่';
       const rawDate =
         document.getElementById('date').value;
 
@@ -485,8 +490,10 @@ machineSelect.addEventListener(
 
   console.log('SAVE SUCCESS');
 
-  submitButton.textContent = 'บันทึกสำเร็จ';
+  submitButton.textContent = 'ส่งรายงาน';
   submitButton.disabled = false;
+  submitButton.setAttribute('aria-busy', 'false');
+  formStatus.textContent = 'บันทึกรายงานสำเร็จ';
       
   // ล้างเฉพาะข้อมูลของ Report
   document.getElementById('pass').value = '';
@@ -518,9 +525,17 @@ machineSelect.addEventListener(
 
 } catch (error) {
 
-  // console.error('SAVE ERROR:', error);
-  alert('SAVE ERROR:\n', error.message);
+  const errorMessage =
+    error instanceof Error
+      ? error.message
+      : String(error);
+
+  console.error('SAVE ERROR:', error);
+  alert('บันทึกรายงานไม่สำเร็จ\n' + errorMessage);
   submitButton.disabled = false;
+  submitButton.setAttribute('aria-busy', 'false');
+  formStatus.textContent =
+    'เกิดข้อผิดพลาด: ' + errorMessage;
 
   submitButton.textContent =
     'เกิดข้อผิดพลาด - ลองส่งอีกครั้ง';

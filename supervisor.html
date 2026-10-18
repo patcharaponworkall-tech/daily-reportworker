@@ -20,23 +20,24 @@
 
 <body>
 
-  <h1>📣 ส่งรายงานต่อหัวหน้า</h1>
+  <h1 id="supervisorHeading">📣 ส่งรายงานต่อหัวหน้า</h1>
 
-  <div>
+  <main class="supervisor-card" aria-labelledby="supervisorHeading">
 
     <p>
-      <label>Date</label><br>
+      <label for="supervisorDate">Date</label><br>
 
       <input
         type="date"
         id="supervisorDate"
+        required
       >
     </p>
 
     <p>
-      <label>Shift</label><br>
+      <label for="supervisorShift">Shift</label><br>
 
-      <select id="supervisorShift">
+      <select id="supervisorShift" required>
 
         <option value="">
           -- Select Shift --
@@ -54,9 +55,9 @@
     </p>
 
     <p>
-      <label>Line</label><br>
+      <label for="supervisorLine">Line</label><br>
 
-      <select id="supervisorLine">
+      <select id="supervisorLine" required>
 
         <option value="">
           -- Select Line --
@@ -82,10 +83,16 @@
       </button>
     </p>
     
-    <div id="supervisorPreview" style="display: none;">
+    <div
+      id="supervisorPreview"
+      role="region"
+      aria-live="polite"
+      aria-labelledby="supervisorPreviewHeading"
+      style="display: none;"
+    >
   <hr>
 
-  <h2>Preview</h2>
+  <h2 id="supervisorPreviewHeading">Preview</h2>
 
   <div id="supervisorReportText"></div>
 
@@ -94,13 +101,14 @@
     <p>
       <button
         type="button"
+        aria-label="กลับไปหน้า Daily Report"
         onclick="window.location.href='index.html'"
       >
         ← กลับหน้า Daily Report
       </button>
     </p>
 
-  </div>
+  </main>
 
 
 <script>
@@ -345,12 +353,14 @@ reportText.innerHTML = `
   >
 </p>
 
-<p id="supervisorImageStatus">
+<p id="supervisorImageStatus" role="status" aria-live="polite">
   ยังไม่ได้เลือกรูป
 </p>
 
 <div
   id="supervisorImagePreview"
+  role="region"
+  aria-label="ตัวอย่างรูปภาพที่เลือก"
   style="
     display: flex;
     flex-wrap: wrap;
@@ -370,9 +380,11 @@ reportText.innerHTML = `
 
   <div
     id="finalSupervisorPreview"
+    role="region"
+    aria-labelledby="finalSupervisorPreviewHeading"
     style="display: none;"
   >
-    <h3>ข้อความที่จะส่ง</h3>
+    <h3 id="finalSupervisorPreviewHeading">ข้อความที่จะส่ง</h3>
 
     <pre
       id="finalSupervisorText"

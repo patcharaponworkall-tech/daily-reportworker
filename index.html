@@ -16,18 +16,19 @@
 <button
   type="button"
   id="themeToggleBtn"
-  style="margin-bottom: 15px; padding: 8px 16px; border-radius: 20px; border: 1px solid var(--border-color); background: var(--card-bg); color: var(--text-color); cursor: pointer;"
+  aria-pressed="false"
+  aria-label="เปลี่ยนเป็นโหมดมืด"
 >
   <span id="themeIcon">🌙</span>
   <span id="themeText">โหมดมืด</span>
 </button>
-  <h1>Daily Report</h1>
-  <p id="liffUserInfo">
+  <h1 id="reportHeading">Daily Report</h1>
+  <p id="liffUserInfo" role="status" aria-live="polite">
   กำลังตรวจสอบผู้ใช้ LINE...
   </p>
 
   
-  <form id="reportForm">
+  <form id="reportForm" aria-labelledby="reportHeading">
     <p>
       <button
     type="button"
@@ -39,7 +40,7 @@
     </p>
     
     <p>
-      <label>Date</label><br>
+      <label for="date">Date</label><br>
       <input
         type="date"
         id="date"
@@ -48,7 +49,7 @@
     </p>
 
     <p>
-      <label>Shift</label><br>
+      <label for="shift">Shift</label><br>
       <select id="shift" required>
         <option value="">-- Select Shift --</option>
         <option value="DAY">DAY</option>
@@ -57,7 +58,7 @@
     </p>
 
     <p>
-      <label>Line</label><br>
+      <label for="line">Line</label><br>
       <select id="line" required>
         <option value="">-- Select Line --</option>
         <option value="J17">J17</option>
@@ -66,14 +67,14 @@
     </p>
 
     <p>
-      <label>Model</label><br>
+      <label for="model">Model</label><br>
         <select id="model" required>
         <option value="">-- Select Model --</option>
         </select>
     </p>
 
     <p>
-      <label>Machine</label><br>
+      <label for="machine">Machine</label><br>
       <select id="machine" required>
         <option value="">-- Select Machine --</option>
         <option value="BFT">BFT</option>
@@ -81,7 +82,7 @@
     </p>
 
     <p>
-      <label>Pass / OK</label><br>
+      <label for="pass">Pass / OK</label><br>
       <input
         type="number"
         id="pass"
@@ -91,7 +92,7 @@
     </p>
 
     <p>
-      <label>Fail / NG</label><br>
+      <label for="fail">Fail / NG</label><br>
       <input
         type="number"
         id="fail"
@@ -101,7 +102,7 @@
     </p>
 
     <p>
-      <label>WIP</label><br>
+      <label for="wip">WIP</label><br>
       <input
         type="number"
         id="wip"
@@ -112,16 +113,14 @@
 
     
     <p>
-    <label>
     <input
       type="checkbox"
       id="appendProblem"
     >
-    ➕ เพิ่มเป็นปัญหาใหม่
-  </label>
+    <label for="appendProblem">➕ เพิ่มเป็นปัญหาใหม่</label>
 </p>
     <p>
-      <label>Issue / ปัญหา</label><br>
+      <label for="issue">Issue / ปัญหา</label><br>
         <textarea
             id="issue"
             rows="6"
@@ -133,7 +132,7 @@
     </p>
 
     <p>
-      <label>วิธีแก้</label><br>
+      <label for="solution">วิธีแก้</label><br>
         <textarea
             id="solution"
             rows="6"
@@ -145,14 +144,14 @@
     </p>
 
     <p>
-      <label>เวลาในการแก้</label><br>
+      <label for="fixTime">เวลาในการแก้</label><br>
       <input
         type="text"
         id="fixTime"
       >
     </p>
     <p>
-  <label>รูปภาพ</label><br>
+  <label for="images">รูปภาพ</label><br>
 
   <input
     type="file"
@@ -169,16 +168,18 @@
   ล้างรูป
 </button>
     <p>
-  <label>ตัวอย่างรูป</label><br>
+  <span class="field-label">ตัวอย่างรูป</span><br>
 
   <canvas
     id="collageCanvas"
+    role="img"
+    aria-label="ตัวอย่างภาพที่เลือกสำหรับรายงาน"
     style="max-width: 100%; border: 1px solid #ccc;"
   ></canvas>
     </p>
 
     <p>
-      <label>Remark</label><br>
+      <label for="remark">Remark</label><br>
       <textarea
         id="remark"
         rows="4"
@@ -186,10 +187,17 @@
         ></textarea>
     </p>
 
+    <p
+      id="formStatus"
+      class="status-message"
+      role="status"
+      aria-live="polite"
+    ></p>
+
     <p>
       <button type="submit" 
       id="submitButton">
-        Submit
+        ส่งรายงาน
       </button>
     </p>
 
@@ -204,20 +212,25 @@
     // ฟังก์ชันอัปเดตข้อความบนปุ่ม
     function updateButtonUI(isDark) {
       if (isDark) {
-        themeIcon.textContent = '🌙';
-        themeText.textContent = 'โหมดมืด';
-      } else {
         themeIcon.textContent = '☀️';
         themeText.textContent = 'โหมดสว่าง';
+        themeToggleBtn.setAttribute('aria-label', 'เปลี่ยนเป็นโหมดสว่าง');
+      } else {
+        themeIcon.textContent = '🌙';
+        themeText.textContent = 'โหมดมืด';
+        themeToggleBtn.setAttribute('aria-label', 'เปลี่ยนเป็นโหมดมืด');
       }
+
+      themeToggleBtn.setAttribute('aria-pressed', String(isDark));
     }
 
     // ดึงค่าโหมดที่เคยเก็บบันทึกไว้
     const savedTheme = localStorage.getItem('theme');
     if (savedTheme === 'dark') {
       document.body.classList.add('dark-mode');
-      updateButtonUI(true);
     }
+
+    updateButtonUI(document.body.classList.contains('dark-mode'));
 
     // เหตุการณ์เมื่อกดปุ่มสลับโหมด
     themeToggleBtn.addEventListener('click', () => {

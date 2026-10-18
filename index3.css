@@ -49,6 +49,7 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
+  min-height: 100vh;
   transition: background-color 0.3s, color 0.3s;
 }
 
@@ -60,7 +61,8 @@ h1 {
   text-align: center;
 }
 
-form#reportForm {
+form#reportForm,
+.supervisor-card {
   background-color: var(--card-bg);
   width: 100%;
   max-width: 600px;
@@ -71,16 +73,31 @@ form#reportForm {
   transition: background-color 0.3s, border-color 0.3s;
 }
 
-form#reportForm p {
+form#reportForm p,
+.supervisor-card p {
   margin-bottom: 20px;
 }
 
-label {
+label,
+.field-label {
   font-weight: 500;
   font-size: 0.95rem;
   color: var(--label-color);
   display: inline-block;
   margin-bottom: 6px;
+}
+
+#themeToggleBtn {
+  align-self: center;
+  margin-bottom: 15px;
+  padding: 8px 16px;
+  border: 1px solid var(--border-color);
+  border-radius: 999px;
+  color: var(--text-color);
+  background: var(--card-bg);
+  font: inherit;
+  cursor: pointer;
+  transition: background-color 0.2s, border-color 0.2s, color 0.2s;
 }
 
 input[type="date"],
@@ -117,6 +134,32 @@ input[type="file"] {
   font-size: 0.9rem;
   color: var(--label-color);
   padding: 6px 0;
+}
+
+input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  margin-right: 6px;
+  accent-color: var(--primary-color);
+  vertical-align: middle;
+}
+
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 3px solid rgba(59, 130, 246, 0.45);
+  outline-offset: 2px;
+}
+
+button:disabled {
+  cursor: wait;
+  opacity: 0.7;
+}
+
+.status-message {
+  min-height: 1.5rem;
+  color: var(--label-color);
 }
 
 #clearImagesButton {
@@ -166,12 +209,100 @@ button[type="submit"]:active {
   transform: scale(0.99);
 }
 
+.supervisor-card h2,
+.supervisor-card h3 {
+  margin-bottom: 16px;
+  color: var(--text-color);
+}
+
+.supervisor-card hr {
+  margin: 24px 0;
+  border: 0;
+  border-top: 1px solid var(--border-color);
+}
+
+.supervisor-card button {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  color: var(--text-color);
+  background-color: var(--danger-bg);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s, border-color 0.2s, transform 0.1s;
+}
+
+.supervisor-card button:hover {
+  background-color: var(--danger-hover);
+}
+
+.supervisor-card button:active {
+  transform: scale(0.99);
+}
+
+#searchSupervisorButton,
+#previewSupervisorButton,
+#sendSupervisorButton {
+  color: #ffffff;
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+}
+
+#searchSupervisorButton:hover,
+#previewSupervisorButton:hover,
+#sendSupervisorButton:hover {
+  background-color: var(--primary-hover);
+  border-color: var(--primary-hover);
+}
+
+#supervisorPreview {
+  margin-top: 24px;
+}
+
+#supervisorReportText > div {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+#supervisorReportText > div input {
+  flex: 1;
+}
+
+#supervisorImageStatus {
+  color: var(--label-color);
+}
+
+#finalSupervisorPreview {
+  margin-top: 20px;
+  padding: 20px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  background-color: var(--bg-color);
+}
+
+#finalSupervisorText {
+  margin-bottom: 20px;
+  overflow-wrap: anywhere;
+  font: inherit;
+}
+
+button:disabled,
+.supervisor-card button:disabled {
+  cursor: wait;
+  opacity: 0.7;
+}
+
 /* Responsive ปรับแต่งสำหรับมือถือ */
 @media (max-width: 480px) {
   body {
     padding: 10px;
   }
-  form#reportForm {
+  form#reportForm,
+  .supervisor-card {
     padding: 20px;
   }
 }
