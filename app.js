@@ -1,6 +1,62 @@
 
 let liffProfile = null;
 
+const GAS_URL =
+  'https://script.google.com/macros/s/AKfycbz14A1FjQRCWOT427jwoLhEG-UTRgPTFS8gguUWTppOJ4Jnjacd-QxQ4R4yD18Cx6i0/exec';
+
+const REQUEST_TIMEOUT_MS = 30000;
+const MAX_IMAGE_COUNT = 4;
+const MAX_IMAGE_FILE_SIZE_BYTES = 5 * 1024 * 1024;
+const MAX_TOTAL_IMAGE_SIZE_BYTES = 12 * 1024 * 1024;
+
+async function fetchJsonWithTimeout(url, options) {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(
+    function () {
+      controller.abort();
+    },
+    REQUEST_TIMEOUT_MS
+  );
+
+  try {
+    const response = await fetch(
+      url,
+      Object.assign({}, options, {
+        signal: controller.signal
+      })
+    );
+
+    if (!response.ok) {
+      throw new Error(
+        `เซิร์ฟเวอร์ตอบกลับด้วยสถานะ ${response.status}`
+      );
+    }
+
+    const contentType =
+      response.headers.get('content-type') || '';
+
+    if (!contentType.includes('application/json')) {
+      throw new Error(
+        'รูปแบบคำตอบจากเซิร์ฟเวอร์ไม่ถูกต้อง'
+      );
+    }
+
+    return await response.json();
+
+  } catch (error) {
+    if (error && error.name === 'AbortError') {
+      throw new Error(
+        'การเชื่อมต่อหมดเวลา กรุณาลองใหม่อีกครั้ง'
+      );
+    }
+
+    throw error;
+
+  } finally {
+    clearTimeout(timeoutId);
+  }
+}
+
 async function initializeLiff() {
 
   const info =
@@ -51,6 +107,7 @@ async function initializeLiff() {
 
 let currentCollageBase64 = '';
 let isProcessingImages = false;
+let imageProcessingGeneration = 0;
 function drawImageCover(
   ctx,
   image,
@@ -210,19 +267,10 @@ async function createCollage(files) {
     0.8
   );
 
-    console.log(
-    'COLLAGE BASE64 LENGTH:',
-    collageBase64.length
-    );
-
-    console.log(
-    'COLLAGE TYPE:',
-    collageBase64.substring(0, 23)
-    );
     return collageBase64;
 }
-document.addEventListener('DOMContentLoaded', async  function () {
-  await  initializeLiff();
+document.addEventListener('DOMContentLoaded', function () {
+  initializeLiff();
 const shiftSelect =
         document.getElementById('shift');
 
@@ -381,10 +429,6 @@ machineSelect.addEventListener(
             'กำลังประมวลผลรูป กรุณารอสักครู่'
         );
 
-        console.log('SUBMIT EVENT WORKS');
-
-        alert('SUBMIT EVENT WORKS');
-
         return;
         }
         const confirmMessage =
@@ -455,28 +499,15 @@ machineSelect.addEventListener(
       
         imageBase64: currentCollageBase64
       };
-      console.log('SEND:', report);
-      console.log(
-      'IMAGE BASE64 LENGTH:',
-        report.imageBase64.length
-    );
-
-      const url =
-        'https://script.google.com/macros/s/AKfycbz14A1FjQRCWOT427jwoLhEG-UTRgPTFS8gguUWTppOJ4Jnjacd-QxQ4R4yD18Cx6i0/exec';
-
     try {
 
-  const response = await fetch(url, {
+  const result = await fetchJsonWithTimeout(GAS_URL, {
     method: 'POST',
     headers: {
       'Content-Type': 'text/plain;charset=utf-8'
     },
     body: JSON.stringify(report)
   });
-
-  const result = await response.json();
-      
-  console.log('GAS RESPONSE:', result);
 
 
   // GAS ตอบกลับว่าไม่สำเร็จ
@@ -554,6 +585,7 @@ clearImagesButton.addEventListener(
 
     imageInput.value = '';
     currentCollageBase64 = '';
+    imageProcessingGeneration++;
     isProcessingImages = false;
     clearImagesButton.style.display = 'none';
     const canvas =
@@ -569,7 +601,6 @@ clearImagesButton.addEventListener(
       canvas.height
     );
 
-    console.log('IMAGES CLEARED');
   }
 );  
 imageInput.addEventListener(
@@ -578,6 +609,9 @@ imageInput.addEventListener(
 
     const selectedImages =
       Array.from(imageInput.files);
+
+    const processingGeneration =
+      ++imageProcessingGeneration;
 
     isProcessingImages = true;
     if (selectedImages.length === 0) {
@@ -600,9 +634,9 @@ imageInput.addEventListener(
 
   return;
 }
-    if (selectedImages.length > 4) {
+    if (selectedImages.length > MAX_IMAGE_COUNT) {
 
-      alert('เลือกได้สูงสุด 4 รูป');
+      alert(`เลือกได้สูงสุด ${MAX_IMAGE_COUNT} รูป`);
 
       imageInput.value = '';
       currentCollageBase64 = '';
@@ -629,12 +663,6 @@ imageInput.addEventListener(
         'รองรับเฉพาะไฟล์ JPG และ PNG'
       );
 
-      console.log(
-        'INVALID IMAGE TYPE:',
-        invalidImage.name,
-        invalidImage.type
-      );
-
       imageInput.value = '';
       currentCollageBase64 = '';
       isProcessingImages = false;
@@ -642,17 +670,60 @@ imageInput.addEventListener(
       return;
     }
 
-    try {
-
-      currentCollageBase64 =
-        await createCollage(selectedImages);
-        clearImagesButton.style.display = 'inline-block';
-      console.log(
-        'BASE64 READY:',
-        currentCollageBase64.length
+    const oversizedImage =
+      selectedImages.find(
+        function (file) {
+          return file.size > MAX_IMAGE_FILE_SIZE_BYTES;
+        }
       );
 
+    if (oversizedImage) {
+      alert('รูปแต่ละไฟล์ต้องมีขนาดไม่เกิน 5 MB');
+      imageInput.value = '';
+      currentCollageBase64 = '';
+      isProcessingImages = false;
+      return;
+    }
+
+    const totalImageSize =
+      selectedImages.reduce(
+        function (total, file) {
+          return total + file.size;
+        },
+        0
+      );
+
+    if (totalImageSize > MAX_TOTAL_IMAGE_SIZE_BYTES) {
+      alert('ขนาดรูปรวมต้องไม่เกิน 12 MB');
+      imageInput.value = '';
+      currentCollageBase64 = '';
+      isProcessingImages = false;
+      return;
+    }
+
+    try {
+
+      const collageBase64 =
+        await createCollage(selectedImages);
+
+      if (
+        processingGeneration !==
+        imageProcessingGeneration
+      ) {
+        return;
+      }
+
+      currentCollageBase64 = collageBase64;
+      clearImagesButton.style.display = 'inline-block';
+
     } catch (error) {
+
+      if (
+        processingGeneration !==
+        imageProcessingGeneration
+      ) {
+        return;
+      }
 
       console.error(
         'IMAGE PROCESS ERROR:',
@@ -668,7 +739,12 @@ imageInput.addEventListener(
 
     } finally {
 
-      isProcessingImages = false;
+      if (
+        processingGeneration ===
+        imageProcessingGeneration
+      ) {
+        isProcessingImages = false;
+      }
 
     }
 

@@ -24,11 +24,28 @@ function inspectHtml(fileName) {
 
 const indexHtml = inspectHtml('index.html');
 const supervisorHtml = inspectHtml('supervisor.html');
+const appJs = readFileSync(new URL('../app.js', import.meta.url), 'utf8');
 
 assert.match(indexHtml, /id="themeToggleBtn"[^>]*aria-pressed="false"/s);
 assert.match(indexHtml, /id="liffUserInfo"[^>]*aria-live="polite"/s);
 assert.match(indexHtml, /id="formStatus"[^>]*role="status"/s);
 assert.match(supervisorHtml, /class="supervisor-card"/);
 assert.match(supervisorHtml, /id="supervisorPreview"[^>]*role="region"/s);
+assert.match(appJs, /const REQUEST_TIMEOUT_MS = 30000/);
+assert.match(appJs, /new AbortController\(\)/);
+assert.match(appJs, /let imageProcessingGeneration = 0/);
+assert.match(appJs, /MAX_IMAGE_FILE_SIZE_BYTES/);
+assert.match(appJs, /MAX_TOTAL_IMAGE_SIZE_BYTES/);
+assert.doesNotMatch(
+  appJs,
+  /DOMContentLoaded',\s*async\s+function/,
+  'Core form setup must not wait for LIFF initialization',
+);
+assert.doesNotMatch(appJs, /console\.log\(\s*'SEND:'/s);
+assert.doesNotMatch(appJs, /console\.log\(\s*'GAS RESPONSE:'/s);
+assert.match(supervisorHtml, /async function fetchJsonWithTimeout/);
+assert.match(supervisorHtml, /MAX_SUPERVISOR_IMAGE_COUNT = 4/);
+assert.match(supervisorHtml, /MAX_IMAGE_FILE_SIZE_BYTES/);
+assert.doesNotMatch(supervisorHtml, /SUPERVISOR SEARCH RESULT/);
 
 console.log('Static site checks passed.');

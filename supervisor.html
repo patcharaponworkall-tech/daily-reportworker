@@ -168,6 +168,59 @@
   const GAS_URL =
     'https://script.google.com/macros/s/AKfycbz14A1FjQRCWOT427jwoLhEG-UTRgPTFS8gguUWTppOJ4Jnjacd-QxQ4R4yD18Cx6i0/exec';
 
+  const REQUEST_TIMEOUT_MS = 30000;
+  const MAX_SUPERVISOR_IMAGE_COUNT = 4;
+  const MAX_IMAGE_FILE_SIZE_BYTES = 5 * 1024 * 1024;
+  const MAX_TOTAL_IMAGE_SIZE_BYTES = 12 * 1024 * 1024;
+
+  async function fetchJsonWithTimeout(url, options) {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(
+      function () {
+        controller.abort();
+      },
+      REQUEST_TIMEOUT_MS
+    );
+
+    try {
+      const response = await fetch(
+        url,
+        Object.assign({}, options, {
+          signal: controller.signal
+        })
+      );
+
+      if (!response.ok) {
+        throw new Error(
+          `เซิร์ฟเวอร์ตอบกลับด้วยสถานะ ${response.status}`
+        );
+      }
+
+      const contentType =
+        response.headers.get('content-type') || '';
+
+      if (!contentType.includes('application/json')) {
+        throw new Error(
+          'รูปแบบคำตอบจากเซิร์ฟเวอร์ไม่ถูกต้อง'
+        );
+      }
+
+      return await response.json();
+
+    } catch (error) {
+      if (error && error.name === 'AbortError') {
+        throw new Error(
+          'การเชื่อมต่อหมดเวลา กรุณาลองใหม่อีกครั้ง'
+        );
+      }
+
+      throw error;
+
+    } finally {
+      clearTimeout(timeoutId);
+    }
+  }
+
 
   document
     .getElementById('searchSupervisorButton')
@@ -204,7 +257,7 @@
         button.textContent = 'กำลังค้นหา...';
 
 
-        const response = await fetch(
+        const data = await fetchJsonWithTimeout(
           GAS_URL,
           {
             method: 'POST',
@@ -221,16 +274,6 @@
               line: line
             })
           }
-        );
-
-
-        const data =
-          await response.json();
-
-
-        console.log(
-          'SUPERVISOR SEARCH RESULT:',
-          data
         );
 
 
@@ -441,6 +484,17 @@ supervisorImages
       return;
     }
 
+    if (files.length > MAX_SUPERVISOR_IMAGE_COUNT) {
+      alert(
+        `เลือกได้สูงสุด ${MAX_SUPERVISOR_IMAGE_COUNT} รูป`
+      );
+      this.value = '';
+      supervisorImagePreview.innerHTML = '';
+      supervisorImageStatus.textContent =
+        'ยังไม่ได้เลือกรูป';
+      return;
+    }
+
 
     const invalidFile =
       files.find(file =>
@@ -458,6 +512,35 @@ supervisorImages
       supervisorImageStatus.textContent =
         'ยังไม่ได้เลือกรูป';
 
+      return;
+    }
+
+    const oversizedFile =
+      files.find(file =>
+        file.size > MAX_IMAGE_FILE_SIZE_BYTES
+      );
+
+    if (oversizedFile) {
+      alert('รูปแต่ละไฟล์ต้องมีขนาดไม่เกิน 5 MB');
+      this.value = '';
+      supervisorImagePreview.innerHTML = '';
+      supervisorImageStatus.textContent =
+        'ยังไม่ได้เลือกรูป';
+      return;
+    }
+
+    const totalImageSize =
+      files.reduce(
+        (total, file) => total + file.size,
+        0
+      );
+
+    if (totalImageSize > MAX_TOTAL_IMAGE_SIZE_BYTES) {
+      alert('ขนาดรูปรวมต้องไม่เกิน 12 MB');
+      this.value = '';
+      supervisorImagePreview.innerHTML = '';
+      supervisorImageStatus.textContent =
+        'ยังไม่ได้เลือกรูป';
       return;
     }
 
@@ -623,18 +706,12 @@ ${issue}`;
         );
       }
 
-      const result =
-        await liff.shareTargetPicker([
-          {
-            type: 'text',
-            text: finalText
-          }
-        ]);
-
-      console.log(
-        'SUPERVISOR SHARE RESULT:',
-        result
-      );
+      await liff.shareTargetPicker([
+        {
+          type: 'text',
+          text: finalText
+        }
+      ]);
 
     } catch (error) {
 
@@ -675,27 +752,21 @@ ${issue}`;
         return;
       }
 
-const result =
-  await liff.shareTargetPicker(
-    [
-      {
-        type: 'image',
+      await liff.shareTargetPicker(
+        [
+          {
+            type: 'image',
 
-        originalContentUrl:
-          'https://drive.usercontent.google.com/download?id=11YoDCtduUlKoX7wlPUpn8ulMBJC144fz&export=view',
+            originalContentUrl:
+              'https://drive.usercontent.google.com/download?id=11YoDCtduUlKoX7wlPUpn8ulMBJC144fz&export=view',
 
-        previewImageUrl:
-          'https://drive.usercontent.google.com/download?id=11YoDCtduUlKoX7wlPUpn8ulMBJC144fz&export=view'
-      }
-    ],
-    {
-      isMultiple: true
-    }
-  );
-
-      console.log(
-        'SHARE RESULT:',
-        result
+            previewImageUrl:
+              'https://drive.usercontent.google.com/download?id=11YoDCtduUlKoX7wlPUpn8ulMBJC144fz&export=view'
+          }
+        ],
+        {
+          isMultiple: true
+        }
       );
 
     } catch (error) {
@@ -747,8 +818,8 @@ document
           dataUrl.split(',')[1];
 
 
-        const response =
-          await fetch(
+        const data =
+          await fetchJsonWithTimeout(
             'https://script.google.com/macros/s/AKfycbwTO0f4_4Gw7n2DOstvtm3HvuOZNnU1FC9LWR0vN_c2ec7yJSi3d_rw5gE3GrGxsJxP/exec',
             {
               method: 'POST',
@@ -774,16 +845,6 @@ document
                 })
             }
           );
-
-
-        const data =
-          await response.json();
-
-
-        console.log(
-          'SUPERVISOR IMAGE GAS RESULT:',
-          data
-        );
 
 
         if (!data.success) {
